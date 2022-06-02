@@ -24,12 +24,18 @@ class MainActivity : AppCompatActivity() {
         binding.layout.settings.domStorageEnabled = true
         binding.layout.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         binding.layout.loadDataWithBaseURL("https://binds.co",
-            this.getHtmlPage(
-                name = "Dev Android",
+            getHtmlString(
+                name = "String",
                 email = "dev.compass@gmail.com",
                 phone = "958375967",
                 data = ""
             ),
+//            this.getHtmlPage(
+//                name = "index.html",
+//                email = "dev.compass@gmail.com",
+//                phone = "958375967",
+//                data = ""
+//            ),
             "text/html",
             "UTF-8",
             null
@@ -51,5 +57,32 @@ class MainActivity : AppCompatActivity() {
         str = str.replace(oldValue = "%data%", newValue = data)
 
         return str
+    }
+
+    private fun getHtmlString(name: String, email: String, phone: String, data: String): String {
+        return "<!DOCTYPE html>" +
+                "<html>" +
+                "<body>" +
+                "<div>" +
+                "<link href=\"https://widget.binds.co/css/app.css\" rel=stylesheet>" +
+                "<div>" +
+                "<vue-widget widget_position=\"lowerRight\"" +
+                "widget_title=\"feedback\"" +
+                "buttons=\"#f5f5f5\"" +
+                "width=\"400\"" +
+                "text_buttons=\"#35363a\"" +
+                "background=\"#35363a\"" +
+                "texts=\"#ffffff\"" +
+                "timeout=\"0\"" +
+                "width_metric=\"px\"" +
+                "survey_id=\"6266ea891abd3b27d7e23db1\"" +
+                "from='{\"name\": \"$name\", \"email\": \"$email\", \"phone\":\"$phone\"}'" +
+                "is_to_post=\"true\"" +
+                "metadata='{$data}'></vue-widget>" +
+                "</div>" +
+                "<script type=\"text/javascript\" src=\"https://widget.binds.co/js/app.js\"></script>" +
+                "</div>" +
+                "</body>" +
+                "</html>"
     }
 }
