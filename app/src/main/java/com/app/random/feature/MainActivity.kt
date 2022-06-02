@@ -3,40 +3,53 @@ package com.app.random.feature
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.app.random.databinding.ActivityMainBinding
+import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        handlerWebView()
+    }
 
-        //Testing
-        binding.layout.settings.apply {
-            javaScriptCanOpenWindowsAutomatically = true
-            allowContentAccess = true
-            javaScriptEnabled = true
-            allowFileAccess = true
-            domStorageEnabled = true
-        }
-
-        //Testing
+    @SuppressLint(value = ["SetJavaScriptEnabled"])
+    private fun handlerWebView() {
+        binding.layout.settings.javaScriptEnabled = true
+        binding.layout.settings.domStorageEnabled = true
         binding.layout.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-
-        //Testing
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+        binding.layout.loadDataWithBaseURL("https://binds.co",
+            this.getHtmlPage(
+                name = "Dev Android",
+                email = "dev.compass@gmail.com",
+                phone = "958375967",
+                data = ""
+            ),
+            "text/html",
+            "UTF-8",
+            null
         )
+    }
 
-        //This need to be loaded without file, need to be string because metadata and user info
-        binding.layout.loadUrl("file:///android_asset/index.html")
+    private fun getHtmlPage(name: String, email: String, phone: String, data: String) : String {
+        val `is`: InputStream = this.assets.open("index.html")
+        val size: Int = `is`.available()
+
+        val buffer = ByteArray(size)
+        `is`.read(buffer)
+        `is`.close()
+
+        var str = String(buffer)
+        str = str.replace(oldValue = "%name%", newValue = name)
+        str = str.replace(oldValue = "%email%", newValue = email)
+        str = str.replace(oldValue = "%phone%", newValue = phone)
+        str = str.replace(oldValue = "%data%", newValue = data)
+
+        return str
     }
 }
